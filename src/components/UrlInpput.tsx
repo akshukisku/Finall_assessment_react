@@ -1,27 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { UrlSchema, urlvalidation } from "@/services/validation/meta.validation";
+import {
+  UrlSchema,
+  urlvalidation,
+} from "@/services/validation/meta.validation";
 import { useMetaStore } from "@/store/useMetaStore";
 import { useScrapeWebsite } from "@/hooks/useScrapeWebsite";
 
 const UrlInput = () => {
-  const [searchUrl, setSearchUrl] = useState("");
-
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<UrlSchema>({
     resolver: yupResolver(urlvalidation),
   });
 
+  const url = watch("url");
+
   const setMetadata = useMetaStore((state) => state.setMetadata);
 
-  const { data, isLoading, error } = useScrapeWebsite(searchUrl);
+  const {
+    data,
+    isFetching,
+    error,
+    refetch,
+  } = useScrapeWebsite(url);
 
   useEffect(() => {
     if (!data) return;
@@ -32,12 +41,13 @@ const UrlInput = () => {
       image: data.images?.[0] || "",
       url: data.url || "",
       siteName: data.sitename || "",
+      domain: data.domain || "",
       twitterCard: "summary_large_image",
     });
   }, [data, setMetadata]);
 
-  const onSubmit = (formData: UrlSchema) => {
-    setSearchUrl(formData.url);
+  const onSubmit = async () => {
+    await refetch();
   };
 
   return (
@@ -52,7 +62,9 @@ const UrlInput = () => {
       />
 
       {errors.url && (
-        <p className="text-sm text-red-500">{errors.url.message}</p>
+        <p className="text-sm text-red-500">
+          {errors.url.message}
+        </p>
       )}
 
       {error && (
@@ -63,10 +75,10 @@ const UrlInput = () => {
 
       <button
         type="submit"
-        disabled={isLoading}
+        disabled={isFetching}
         className="w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700 disabled:opacity-60"
       >
-        {isLoading ? "Checking Website..." : "Check Website"}
+        {isFetching ? "Checking Website..." : "Check Website"}
       </button>
     </form>
   );

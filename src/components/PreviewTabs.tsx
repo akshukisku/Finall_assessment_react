@@ -43,7 +43,6 @@ const PreviewTabs = () => {
           {tab.label}
         </button>
       ))}
-      <p>{activeTab}</p>
     </div>
   );
 };
