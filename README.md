@@ -41,7 +41,7 @@ A modern web application built with **Next.js**, **TypeScript**, **TanStack Quer
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/website-meta-tag-scraper.git
+git clone https://github.com/akshukisku/website-meta-tag-scraper.git
 ```
 
 ### 2. Navigate to the Project
@@ -190,8 +190,7 @@ This project can be deployed using **Vercel**.
 
 **Akshay Kisku**
 
-* GitHub: https://github.com/your-username
-* LinkedIn: https://linkedin.com/in/your-profile
+* GitHub: https://github.com/akshukisku
 
 ---
 
